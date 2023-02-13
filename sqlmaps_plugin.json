@@ -1,0 +1,9 @@
+{
+    "Keys": ["sqlmaps"],
+    "Provider": "sqlmaps",
+    "Version": 100,
+    "Experimental": false,
+    "Features": [
+        "OfflineMappingFeature"
+    ]
+}
