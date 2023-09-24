@@ -21,44 +21,46 @@ QT_BEGIN_NAMESPACE
 QGeoTiledMappingManagerEngineSqlMaps::QGeoTiledMappingManagerEngineSqlMaps(const QVariantMap          &parameters,
                                                                            QGeoServiceProvider::Error *error,
                                                                            QString                    *errorString):
-        QGeoTiledMappingManagerEngine()
+    QGeoTiledMappingManagerEngine()
 {
-        Q_UNUSED(error);
-        Q_UNUSED(errorString);
+    Q_UNUSED(error);
+    Q_UNUSED(errorString);
 
-        for (auto k : parameters.keys())
-        {
-                std::cout << "PARAMS: " << k.toStdString() << " : " << parameters[k].toString().toStdString() << std::endl;
-        }
+    setCacheHint(QAbstractGeoTileCache::MemoryCache);
 
-        QGeoCameraCapabilities  capabilities;
+    for (auto k : parameters.keys())
+    {
+        std::cout << "PARAMS: " << k.toStdString() << " : " << parameters[k].toString().toStdString() << std::endl;
+    }
 
-        capabilities.setMinimumZoomLevel(0.0);
-        capabilities.setMaximumZoomLevel(21.0);
+    QGeoCameraCapabilities  capabilities;
 
-        setCameraCapabilities(capabilities);
+    capabilities.setMinimumZoomLevel(0.0);
+    capabilities.setMaximumZoomLevel(21.0);
 
-        int  tile = parameters.value(QStringLiteral("Xyzmaps.maps.tilesize"), 256).toInt();
+    setCameraCapabilities(capabilities);
 
-        setTileSize(QSize(tile, tile));
+    int  tile = parameters.value(QStringLiteral("Xyzmaps.maps.tilesize"), 256).toInt();
 
-        QList<QGeoMapType>  types;
+    setTileSize(QSize(tile, tile));
+
+    QList<QGeoMapType>  types;
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
-        types << QGeoMapType(QGeoMapType::StreetMap, "Bing Street Map", "Bing street map", false, false, 1);
+    types << QGeoMapType(QGeoMapType::StreetMap, "Bing Street Map", "Bing street map", false, false, 1);
 
 #elif QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
-        types << QGeoMapType(QGeoMapType::StreetMap, "Bing Street Map", "Bing street map", false, false, 1, "bingmaps");
+    types << QGeoMapType(QGeoMapType::StreetMap, "Bing Street Map", "Bing street map", false, false, 1, "bingmaps");
 
 #else
-        types << QGeoMapType(QGeoMapType::SatelliteMapDay, "SQL Map", "SQL map", false, false, 1, "sqlmaps", capabilities, parameters);
+    types << QGeoMapType(QGeoMapType::SatelliteMapDay, "SQL Map", "SQL map", false, false, 1, "sqlmaps", capabilities, parameters);
 
 #endif
 
-        setSupportedMapTypes(types);
+    setSupportedMapTypes(types);
 
-        QGeoTileFetcherSqlMaps *fetcher = new QGeoTileFetcherSqlMaps(parameters, this, tileSize());
-        setTileFetcher(fetcher);
+    QGeoTileFetcherSqlMaps *fetcher = new QGeoTileFetcherSqlMaps(parameters, this, tileSize());
+    setTileFetcher(fetcher);
 
 // if (parameters.contains(QStringLiteral("bingmaps.cachefolder")))
 // {
@@ -72,7 +74,7 @@ QGeoTiledMappingManagerEngineSqlMaps::QGeoTiledMappingManagerEngineSqlMaps(const
 // QAbstractGeoTileCache *tileCache = new QGeoFileTileCache(m_cacheDirectory);
 // setTileCache(tileCache);
 
-        populateMapSchemes();
+    populateMapSchemes();
 }
 
 QGeoTiledMappingManagerEngineSqlMaps::~QGeoTiledMappingManagerEngineSqlMaps()
@@ -81,20 +83,20 @@ QGeoTiledMappingManagerEngineSqlMaps::~QGeoTiledMappingManagerEngineSqlMaps()
 
 void  QGeoTiledMappingManagerEngineSqlMaps::populateMapSchemes()
 {
-        m_mapSchemes[0] = QStringLiteral("roadmap");
-        m_mapSchemes[1] = QStringLiteral("roadmap");
-        m_mapSchemes[2] = QStringLiteral("satellite");
-        m_mapSchemes[3] = QStringLiteral("hybrid");
+    m_mapSchemes[0] = QStringLiteral("roadmap");
+    m_mapSchemes[1] = QStringLiteral("roadmap");
+    m_mapSchemes[2] = QStringLiteral("satellite");
+    m_mapSchemes[3] = QStringLiteral("hybrid");
 }
 
 QString  QGeoTiledMappingManagerEngineSqlMaps::getScheme(int mapId)
 {
-        return m_mapSchemes[mapId];
+    return m_mapSchemes[mapId];
 }
 
 QGeoMap * QGeoTiledMappingManagerEngineSqlMaps::createMap()
 {
-        return new QGeoTiledMapSqlMaps(this);
+    return new QGeoTiledMapSqlMaps(this);
 }
 
 QT_END_NAMESPACE
