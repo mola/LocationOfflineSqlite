@@ -1,8 +1,10 @@
 TARGET = qtgeoservices_sqlmaps
 QT += location-private positioning-private sql
+CONFIG += plugin shared
 
 PLUGIN_TYPE = geoservices
 PLUGIN_CLASS_NAME = QGeoServiceProviderFactorySqlMaps
+
 load(qt_plugin)
 
 HEADERS += \
